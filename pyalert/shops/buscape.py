@@ -1,19 +1,17 @@
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-from json import loads
+import json
 
-class Buscape():
+class Buscape:
 
     format = "json"
     url = "http://sandbox.buscape.com/service/%s/%s/?keyword=%s&format=%s"
 
-    def __init__( application_id, price = None ):
-        if ( !price ):
-            price = global price
+    def __init__(self, application_id, price):  #todo: colocar price como opcional
         self.price = price;
         self.application_id = application_id
     
-    def request( url ):
+    def request(self, url):
         try:
             req = Request(url)
             response = urlopen(req)
@@ -26,12 +24,12 @@ class Buscape():
         else:
             return response.read().decode("utf8")
     
-    def findProductList(query):
+    def findProductList(self, query):
 
         offers_buscape = []
         
         url = self.url % ( "findProductList", self.application_id, query, self.format )
-        response = request(url)
+        response = self.request(url)
         prod_dict = json.loads( response )
         links = prod_dict["product"][0]["product"]["links"]
         for v in links:
@@ -39,7 +37,7 @@ class Buscape():
             if link["type"] == "xml":
                 product_link = link["url"]
 
-        response = request(product_link)
+        response = self.request(product_link)
         offer_dict = json.loads( response )["offer"]
         for offer in offer_dict:
             of = offer["offer"]
