@@ -1,5 +1,6 @@
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
+from urllib.parse import quote_plus
 import json
 
 class Buscape:
@@ -28,9 +29,9 @@ class Buscape:
 
         offers_buscape = []
         
-        url = self.url % ( "findProductList", self.application_id, query, self.format )
+        url = self.url % ("findProductList", self.application_id, quote_plus(query), self.format)
         response = self.request(url)
-        prod_dict = json.loads( response )
+        prod_dict = json.loads(response)
         links = prod_dict["product"][0]["product"]["links"]
         for v in links:
             link = v["link"]
